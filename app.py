@@ -5,8 +5,8 @@ from streamlit_gsheets import GSheetsConnection
 st.set_page_config(page_title="Bolão Campeão 🇧🇷", page_icon="⚽", layout="centered")
 
 # --- CABEÇALHO PRINCIPAL ---
-st.title("🏆 Bolão Campeão - Brasil!")
-st.write("Faça sua aposta, realize o PIX e concorra ao prêmio acumulado!")
+st.title("🏆 Bolão Campeão 🏆")
+st.write("Faça sua aposta de **R$ 5,00**, realize o PIX e concorra ao prêmio acumulado!")
 
 # 1. Cria a conexão com o Google Sheets
 conn = st.connection("gsheets", type=GSheetsConnection)
@@ -33,8 +33,9 @@ col2.metric("Total de Apostas", len(df_apostas))
 
 st.divider()
 
-# --- ÁREA DE APOSTAS (Agora sem o st.form para ser dinâmico) ---
+# --- ÁREA DE APOSTAS ---
 st.subheader("⚽ Faça sua Aposta")
+st.info("O valor de cada aposta é fixo em **R$ 5,00**.")
 
 nome = st.text_input("Seu Nome")
 
@@ -58,8 +59,6 @@ if tem_penaltis:
 
 st.markdown("---")
 
-valor = st.number_input("Valor da Aposta (R$)", min_value=5.0, step=5.0)
-
 # Botão de registro isolado
 if st.button("Registrar Aposta"):
     if nome == "":
@@ -76,7 +75,7 @@ if st.button("Registrar Aposta"):
         if apostas_feitas >= 2:
             st.error(f"Atenção {nome}: Você já atingiu o limite de 2 apostas por pessoa!")
         else:
-            # Salva tudo de uma vez só na ordem certa
+            # O valor agora é fixo em 5.0
             nova_linha = pd.DataFrame([{
                 'Nome': nome, 
                 'Brasil': placar_br, 
@@ -84,20 +83,25 @@ if st.button("Registrar Aposta"):
                 'Pênaltis?': 'Sim' if tem_penaltis else 'Não',
                 'Pên. Brasil': pen_br if tem_penaltis else '-',
                 'Pên. Noruega': pen_op if tem_penaltis else '-',
-                'Valor (R$)': valor
+                'Valor (R$)': 5.0
             }])
             
             df_atualizado = pd.concat([df_apostas, nova_linha], ignore_index=True)
             conn.update(worksheet="Página1", data=df_atualizado)
             
-            st.success(f"Aposta de {nome} registrada com sucesso! Veja as instruções de pagamento abaixo.")
+            df_apostas = df_atualizado 
+            
+            st.success(f"Aposta de {nome} registrada com sucesso! Desça a página para ver as instruções de pagamento.")
 
 st.divider()
 
 # --- PAGAMENTO VIA PIX ---
 st.subheader("💸 Pagamento via PIX")
-st.info("Para validar sua aposta, realize o PIX do valor escolhido e envie o comprovante no WhatsApp.")
+st.warning("⚠️ **ATENÇÃO:** Para validar sua aposta, realize o PIX de **R$ 5,00** e envie o comprovante no WhatsApp **até antes do início do jogo**.")
 st.code("Chave PIX (Celular): 47989037463", language="text")
+
+# Link direto para o WhatsApp destacado
+st.markdown("👉 **[Clique aqui para enviar o comprovante direto no WhatsApp](https://w.app/bolaocampeao)**")
 
 st.divider()
 
@@ -111,6 +115,7 @@ else:
 st.divider()
 
 # --- RODAPÉ COM REGRAS E CONTATO (Letras Pequenas) ---
-st.caption("📌 **REGRAS DO BOLÃO:** Cada pessoa pode fazer até **duas apostas**. Caso mais de uma pessoa acerte o placar exato, o prêmio acumulado será dividido em partes iguais. Caso ninguém acerte, 40% do valor fica para a casa e os 60% restantes acumularão para o próximo jogo.")
+st.caption("📌 **REGRAS DO BOLÃO:** Valor fixo de R$ 5,00. Cada pessoa pode fazer até **duas apostas**. Caso mais de uma pessoa acerte o placar exato, o prêmio acumulado será dividido em partes iguais. Caso ninguém acerte, 40% do valor fica para a casa e os 60% restantes acumularão para o próximo jogo.")
 
-st.caption("📞 **CONTATO:** Criador: Davi Castro | WhatsApp: (47) 98903-7463")
+# O número de contato no rodapé agora também é um link clicável
+st.caption("📞 **CONTATO:** Criador: Davi Castro | [WhatsApp: (47) 98903-7463](https://w.app/bolaocampeao)")
