@@ -83,7 +83,8 @@ if st.button("Registrar Aposta"):
                 'Pênaltis?': 'Sim' if tem_penaltis else 'Não',
                 'Pên. Brasil': pen_br if tem_penaltis else '-',
                 'Pên. Noruega': pen_op if tem_penaltis else '-',
-                'Valor (R$)': 5.0
+                'Valor (R$)': 5.0,
+                'Pago': '⏳ Não'
             }])
             
             df_atualizado = pd.concat([df_apostas, nova_linha], ignore_index=True)
@@ -115,7 +116,7 @@ else:
 st.divider()
 
 # --- RODAPÉ COM REGRAS E CONTATO (Letras Pequenas) ---
-st.caption("📌 **REGRAS DO BOLÃO:** Valor fixo de R$ 5,00. Cada pessoa pode fazer até **duas apostas**. Caso mais de uma pessoa acerte o placar exato, o prêmio acumulado será dividido em partes iguais. Caso ninguém acerte, 40% do valor fica para a casa e os 60% restantes acumularão para o próximo jogo.")
+st.caption("📌 **REGRAS DO BOLÃO:** Valor fixo de R$ 5,00. Cada pessoa pode fazer até **duas apostas**. Caso mais de uma pessoa acerte o placar exato, o prêmio acumulado será dividido em partes iguais. Se houver Não-Pagantes o valoracuulado pode ser menor. Caso ninguém acerte, 40% do valor fica para a casa e o restante acumulará para o próximo jogo (se houver).")
 
 # O número de contato no rodapé agora também é um link clicável
-st.caption("📞 **CONTATO:** Criador: Davi Castro | [WhatsApp: (47) 98903-7463](https://w.app/bolaocampeao)")
+st.caption("📞 **CONTATO:** Davi Castro | [WhatsApp: (47) 98903-7463](https://w.app/bolaocampeao)")
